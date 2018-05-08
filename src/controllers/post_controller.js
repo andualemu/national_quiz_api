@@ -5,8 +5,9 @@ export const createPost = (req, res) => {
   const post = new Post();
   post.title = req.body.title;
   post.content = req.body.content;
-  post.tags = req.body.tags;
+  post.tags = req.body.tags.split(' ');
   post.cover_url = req.body.cover_url;
+  post.comments = '';
 
   post.save()
     .then((result) => {
@@ -20,7 +21,7 @@ export const createPost = (req, res) => {
 const parseOutContent = (givenPost) => {
   return givenPost.map((post) => {
     return {
-      title: post.title, id: post._id, tags: post.tags, cover_url: post.cover_url, comments: post.comments,
+      title: post.title, id: post._id, tags: post.tags.toString(), cover_url: post.cover_url, comments: post.comments,
     };
   });
 };
@@ -58,8 +59,9 @@ export const updatePost = (req, res) => {
     {
       title: req.body.title,
       content: req.body.content,
-      tags: req.body.tags,
+      tags: req.body.tags.split(' '),
       cover_url: req.body.cover_url,
+      comments: req.body.comments,
     },
   )
     .then((result) => {
