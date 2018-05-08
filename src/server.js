@@ -3,9 +3,16 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import path from 'path';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
+import apiRouter from './router';
+
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/9090';
+mongoose.connect(mongoURI);
+mongoose.Promise = global.Promise;
 
 // initialize
 const app = express();
+
 
 // enable/disable cross origin resource sharing if necessary
 app.use(cors());
@@ -26,7 +33,7 @@ app.set('views', path.join(__dirname, '../src/views'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
+app.use('/api', apiRouter);
 // default index route
 app.get('/', (req, res) => {
   res.send('hi');
