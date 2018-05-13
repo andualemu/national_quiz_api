@@ -8,9 +8,11 @@ export const createPost = (req, res) => {
   post.tags = req.body.tags.split(' ');
   post.cover_url = req.body.cover_url;
   post.comments = '';
+  post.author = req.user._id;
 
   post.save()
     .then((result) => {
+      console.log(result);
       res.json({ message: 'Post created!' });
     })
     .catch((error) => {
@@ -46,26 +48,50 @@ export const getPost = (req, res) => {
 };
 
 export const deletePost = (req, res) => {
-  Post.remove({ _id: req.params.id }).then((result) => {
-    res.send('post deleted');
-  }).catch((error) => {
-    res.status(500).send(error);
-  });
+  // find post to update
+  Post.findById(req.params.id)
+    .then((post) => {
+      // if user owns the post, then delete
+      if (req.user._id.equals(post.author)) {
+        Post.remove({ _id: req.params.id }).then((result) => {
+          res.send('post deleted');
+        }).catch((error) => {
+          res.status(500).send(error);
+        });
+      } else {
+        res.status(403).send('Forbiden request');
+      }
+    })
+    .catch((error) => {
+      res.json({ error });
+    });
 };
 
 export const updatePost = (req, res) => {
-  Post.findByIdAndUpdate(
-    req.params.id,
-    {
-      title: req.body.title,
-      content: req.body.content,
-      tags: req.body.tags.split(' '),
-      cover_url: req.body.cover_url,
-      comments: req.body.comments,
-    },
-  )
-    .then((result) => {
-      res.json({ message: 'Post updated!' });
+  // find post to update
+  Post.findById(req.params.id)
+    .then((post) => {
+      // if user owns the post, then update
+      if (req.user._id.equals(post.author)) {
+        Post.findByIdAndUpdate(
+          req.params.id,
+          {
+            title: req.body.title,
+            content: req.body.content,
+            tags: req.body.tags.split(' '),
+            cover_url: req.body.cover_url,
+            comments: req.body.comments,
+          },
+        )
+          .then((result) => {
+            res.json({ message: 'Post updated!' });
+          })
+          .catch((error) => {
+            res.json({ error });
+          });
+      } else {
+        res.status(403).send('Forbiden request');
+      }
     })
     .catch((error) => {
       res.json({ error });
