@@ -40,6 +40,7 @@ export const getPost = (req, res) => {
       tags: post.tags,
       content: post.content,
       cover_url: post.cover_url,
+      author: post.author,
     });
   })
     .catch((error) => {
@@ -59,7 +60,7 @@ export const deletePost = (req, res) => {
           res.status(500).send(error);
         });
       } else {
-        res.status(403).send('Forbiden request');
+        res.status(403).json({ message: 'Delete Denied, you don\'t own this post' });
       }
     })
     .catch((error) => {
@@ -90,7 +91,7 @@ export const updatePost = (req, res) => {
             res.json({ error });
           });
       } else {
-        res.status(403).send('Forbiden request');
+        res.status(403).json({ message: 'Edit Denied, you don\'t own this post' });
       }
     })
     .catch((error) => {

@@ -23,5 +23,7 @@ router.post('/signin', requireSignin, UserController.signin);
 
 router.post('/signup', UserController.signup);
 
+router.get('/profile/:email', UserController.profile);
+
 
 export default router;

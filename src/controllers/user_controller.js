@@ -44,3 +44,12 @@ export const signup = (req, res, next) => {
     }
   });
 };
+
+export const profile = (req, res, next) => {
+  User.findOne({ email: req.params.email }).then((user) => {
+    res.send(user);
+  })
+    .catch((error) => {
+      res.status(500).json({ error });
+    });
+};
