@@ -12,34 +12,45 @@ function tokenForUser(user) {
 
 export const signin = (req, res, next) => {
   res.send({ token: tokenForUser(req.user) });
+  next();
 };
 
 export const signup = (req, res, next) => {
   const { email } = req.body;
   const { password } = req.body;
-  console.log('herea');
-  if (!email || !password) {
+  const { userName } = req.body;
+
+  if (!email || !password || !userName) {
     res.status(422).send('You must provide email and password');
+    next();
   }
 
   // find if user already exists
   User.find({ email }).limit(1).count((err, count) => {
-    if (err) res.status(300).send('count of find failed');
+    if (err) {
+      console.log('herea');
+      res.status(300).send('count of find failed');
+      next();
+    }
 
     if (count === 1) {
       res.status(409).send('User email already exists');
+      next();
     } else {
       // create a new user and save
       const user = new User();
       user.email = email;
       user.password = password;
+      user.userName = userName;
 
       user.save()
         .then((result) => {
           res.send({ token: tokenForUser(user) });
+          next();
         })
         .catch((error) => {
           res.status(500).json({ error });
+          next();
         });
     }
   });
@@ -48,8 +59,10 @@ export const signup = (req, res, next) => {
 export const profile = (req, res, next) => {
   User.findOne({ email: req.params.email }).then((user) => {
     res.send(user);
+    next();
   })
     .catch((error) => {
       res.status(500).json({ error });
+      next();
     });
 };
