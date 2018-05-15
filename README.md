@@ -15,6 +15,6 @@ Procfile set up to run on [heroku](https://devcenter.heroku.com/articles/getting
 	Adding comments didn't work. It requres a separate model.
 
 # Extra credit
-	Profile page
-	Error handling with store, actions, and reducers
-	Permissions so that users can only edit or delete their own posts.
+	More pages and content: Profile page
+	Redux error handeling: Error handling with store, actions, and reducers
+	Permission system: Permissions so that users can only edit or delete their own posts.
