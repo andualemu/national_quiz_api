@@ -42,6 +42,9 @@ export const signup = (req, res, next) => {
       user.email = email;
       user.password = password;
       user.userName = userName;
+      const z = 'z';
+      user.bio = [z, z, z, z, z, z, z, z, z, z];
+      user.math = [z, z, z, z, z, z, z, z, z, z];
 
       user.save()
         .then((result) => {
@@ -64,5 +67,20 @@ export const profile = (req, res, next) => {
     .catch((error) => {
       res.status(500).json({ error });
       next();
+    });
+};
+
+export const updateUserAnswers = (req, res, next) => {
+  console.log(req.params.id, req.params.subject);
+  console.log(req.body);
+  const update = {};
+  update[req.params.subject] = req.body;
+  console.log('update', update);
+  User.findByIdAndUpdate(req.params.id, update)
+    .then((result) => {
+      res.json({ message: 'Post updated!' });
+    })
+    .catch((error) => {
+      res.json({ error });
     });
 };

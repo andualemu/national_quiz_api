@@ -7,6 +7,8 @@ const UserSchema = new Schema({
   userName: { type: String },
   email: { type: String, unique: true, lowercase: true },
   password: { type: String },
+  bio: [String],
+  math: [String],
 });
 
 UserSchema.set('toJSON', {
