@@ -24,5 +24,7 @@ router.get('/profile/:email', UserController.profile);
 
 router.put('/user/:id/:subject', requireAuth, UserController.updateUserAnswers);
 
+router.put('/points/:id', requireAuth, UserController.updateUserPoints);
+
 
 export default router;
